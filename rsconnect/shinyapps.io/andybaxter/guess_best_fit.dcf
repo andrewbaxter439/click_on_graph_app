@@ -5,8 +5,8 @@ account: andybaxter
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3780096
-bundleId: 4335316
+bundleId: 4335354
 url: https://andybaxter.shinyapps.io/guess_best_fit/
-when: 1615549347.87282
+when: 1615550000.44988
 asMultiple: FALSE
 asStatic: FALSE

@@ -92,7 +92,7 @@ server <- function(input, output, session) {
             geom_abline(
                 intercept = inputLine$int,
                 slope = inputLine$grad,
-                aes(alpha = "Your line"),
+                # aes(alpha = "Your line"),
                 colour = "red"
             ) +
             geom_line(
