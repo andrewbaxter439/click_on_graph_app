@@ -4,7 +4,7 @@ library(glue)
 
 ui <- fluidPage(titlePanel("Old Faithful Geyser Data"),
                 
-                # Sidebar with a slider input for number of bins
+                
                 sidebarLayout(
                     sidebarPanel(fluidRow(
                         column(6,
@@ -20,7 +20,9 @@ ui <- fluidPage(titlePanel("Old Faithful Geyser Data"),
                     
                     
                     mainPanel(
-                        plotOutput("distPlot", click = "click_graph"),
+                        plotOutput("distPlot", 
+                                   click = "click_graph",
+                                   dblclick  = "clear_graph"),
                         
                         verbatimTextOutput("coords")
                     )
@@ -74,11 +76,25 @@ server <- function(input, output, session) {
                 size = 5,
                 shape = 3
             ) +
-            geom_abline(intercept = lineDraw$int, slope = lineDraw$grad)
+            geom_abline(intercept = inputLine$int, slope = inputLine$grad)
+    })
+    
+    inputLine <- reactiveValues()
+    
+    observe({
+        inputLine$grad <- input$slope
+        inputLine$int <- input$intercept
+    })
+    
+    observeEvent(input$clear_graph, {
+        clicks$c1 <- NULL
+        clicks$c2 <- NULL
+        inputLine$grad <- NULL
+        inputLine$int <- NULL
+        clicks$clickno <- 1
     })
     
     output$coords <- renderText({
-        # paste(clicks$c1, clicks$c2, lineDraw$grad, lineDraw$int)
         glue(
             "x1 = {clicks$c1$x}, y1 = {clicks$c1$y}
              x2 = {clicks$c2$x}, y2 = {clicks$c2$y}
