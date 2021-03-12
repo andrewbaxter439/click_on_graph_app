@@ -1,0 +1,12 @@
+name: guess_best_fit
+title: guess_best_fit
+username:
+account: andybaxter
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3780096
+bundleId: 4335290
+url: https://andybaxter.shinyapps.io/guess_best_fit/
+when: 1615548944.40632
+asMultiple: FALSE
+asStatic: FALSE

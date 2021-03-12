@@ -24,7 +24,8 @@ ui <- fluidPage(titlePanel("Old Faithful Geyser Data"),
                                    click = "click_graph",
                                    dblclick  = "clear_graph"),
                         p(
-                            "Click on two points on the graph to estimate a best fitted straight line. Double-click to clear."
+                            "Click on two points on the graph to estimate a best fitted straight line.
+                            Double-click to clear."
                         ),
                         checkboxInput("lm", "Show linear model fit"),
                         fluidRow(
@@ -32,7 +33,7 @@ ui <- fluidPage(titlePanel("Old Faithful Geyser Data"),
                                    verbatimTextOutput("coords")
                                    ),
                             column(6,
-                                   conditionalPanel("input.lm",
+                                   conditionalPanel("input. %>% lm",
                                    verbatimTextOutput("model")
                                                     )
                                    )
@@ -102,11 +103,6 @@ server <- function(input, output, session) {
                 aes(x, y, alpha = "Your line"),
                 inherit.aes = FALSE
             ) +
-            # scale_colour_manual("",
-            #                     values = c(
-            #     "Your line" = "red",
-            #     "Calculated best fit" = "blue"
-            # )) +
             scale_alpha_manual(
                 name = NULL,
                 values = c(
