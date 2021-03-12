@@ -33,7 +33,7 @@ ui <- fluidPage(titlePanel("Old Faithful Geyser Data"),
                                    verbatimTextOutput("coords")
                                    ),
                             column(6,
-                                   conditionalPanel("input. %>% lm",
+                                   conditionalPanel("input.lm",
                                    verbatimTextOutput("model")
                                                     )
                                    )
@@ -174,9 +174,10 @@ server <- function(input, output, session) {
     output$coords <- renderText({
         glue(
             "Your clicks and estimated line:
+             Slope = {lineDraw$grad}
+             Intercept = {lineDraw$int}
              x1 = {clicks$c1$x}, y1 = {clicks$c1$y}
-             x2 = {clicks$c2$x}, y2 = {clicks$c2$y}
-             Slope = {lineDraw$grad}, Intercept = {lineDraw$int}",
+             x2 = {clicks$c2$x}, y2 = {clicks$c2$y}",
             .transformer = function(text, envir) {
                 round(as.numeric(identity_transformer(text, envir)), 2)
             }
@@ -188,8 +189,8 @@ server <- function(input, output, session) {
         
         glue(
             "Calculated model:
-             Slope = {mod$coefficients[2]}
-             Intercept = {mod$coefficients[1]}"
+             Slope = {round(mod$coefficients[2], 2)}
+             Intercept = {round(mod$coefficients[1])}"
         )
         
     })
