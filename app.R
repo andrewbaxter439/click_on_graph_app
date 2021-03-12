@@ -57,15 +57,18 @@ server <- function(input, output, session) {
         lineDraw$int <- int
     })
     
+    df_points <- reactive({
+        data.frame(x = as.numeric(c(clicks$c1$x, clicks$c2$x)), 
+                       y = as.numeric(c(clicks$c1$y, clicks$c2$y)))
+    })
+    
     output$distPlot <- renderPlot({
-        df <-
-            data.frame(x = as.numeric(c(clicks$c1$x, clicks$c2$x)), y = as.numeric(c(clicks$c1$y, clicks$c2$y)))
         
         # draw the histogram with the specified number of bins
         ggplot(faithful, aes(x = eruptions, y = waiting)) +
             geom_point() +
             geom_point(
-                data = df,
+                data = df_points(),
                 aes(x, y),
                 colour = "blue",
                 size = 5,
