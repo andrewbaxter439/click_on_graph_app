@@ -23,7 +23,8 @@ ui <- fluidPage(titlePanel("Old Faithful Geyser Data"),
                         plotOutput("distPlot", 
                                    click = "click_graph",
                                    dblclick  = "clear_graph"),
-                        
+                        p("Click on two points on the graph to estimate a best fitted straight line. Double-click to clear."),
+                        checkboxInput("lm", "Show linear model fit"),
                         verbatimTextOutput("coords")
                     )
                 ))
@@ -67,16 +68,67 @@ server <- function(input, output, session) {
     output$distPlot <- renderPlot({
         
         # draw the histogram with the specified number of bins
-        ggplot(faithful, aes(x = eruptions, y = waiting)) +
+        plt <- ggplot(faithful, aes(x = eruptions, y = waiting)) +
             geom_point() +
             geom_point(
                 data = df_points(),
                 aes(x, y),
-                colour = "blue",
+                colour = "red",
                 size = 5,
+                stroke = 1,
                 shape = 3
             ) +
-            geom_abline(intercept = inputLine$int, slope = inputLine$grad)
+            geom_abline(intercept = inputLine$int,
+                        slope = inputLine$grad,
+                        aes(alpha = "Your line"),
+                        colour = "red") +
+            geom_line(data = data.frame(x = mean(faithful$eruptions), y = mean(faithful$waiting)), 
+                      aes(x, y, alpha = "Your line"), 
+                      inherit.aes = FALSE) +
+            # scale_colour_manual("",
+            #                     values = c(
+            #     "Your line" = "red",
+            #     "Calculated best fit" = "blue"
+            # )) +
+            scale_alpha_manual(name = NULL,
+                               values = c(
+                                   "Your line" = 1,
+                                   "Calculated best fit" = 1
+                               ),
+            guide = guide_legend(override.aes = list(
+                linetype = 1,
+                colour = "red",
+                size = 1,
+                fill = NULL,
+                intercept = NULL,
+                slope = NULL
+            ))) +
+            theme(legend.position = "bottom",
+                  legend.text = element_text(size = 12),
+                  legend.key = element_blank())
+        
+        if (input$lm) {
+            plt <- plt + geom_smooth(method = "lm", 
+                                     se = FALSE,
+                                     aes(alpha = "Calculated best fit"),
+                                     colour = "blue") +
+                scale_alpha_manual(name = NULL,
+                                   values = c(
+                                       "Your line" = 1,
+                                       "Calculated best fit" = 1
+                                   ),
+                                   guide = guide_legend(override.aes = list(
+                                       linetype = 1,
+                                       colour = c("blue", "red"),
+                                       size = 1,
+                                       fill = NULL,
+                                       intercept = NULL,
+                                       slope = NULL
+                                   )))
+        }
+        
+        plt
+        
     })
     
     inputLine <- reactiveValues()
